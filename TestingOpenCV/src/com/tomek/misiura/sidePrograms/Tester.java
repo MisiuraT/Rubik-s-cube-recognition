@@ -1,3 +1,4 @@
+package com.tomek.misiura.sidePrograms;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -8,6 +9,9 @@ import java.util.Scanner;
 
 import org.opencv.core.Core;
 import org.opencv.core.Scalar;
+
+import com.tomek.misiura.recognition.Contour;
+import com.tomek.misiura.recognition.CubeContours;
 
 public class Tester {
 
@@ -51,7 +55,7 @@ public class Tester {
 				for (ImageRecognizer2 item : recognizer) {
 					List<Contour> contourList = item.getContours(data);
 					CubeContours cubeContours = new CubeContours(contourList);
-					cubeContours.matchContours();
+					cubeContours.splitContours();
 					int sum = cubeContours.frontSideContours.size()+cubeContours.leftSideContours.size()+cubeContours.rightSideContours.size();
 					result += sum;
 					out.println(line+" "+sum+" "+cubeContours.frontSideContours.size()+" "+cubeContours.leftSideContours.size()+" "+cubeContours.rightSideContours.size());

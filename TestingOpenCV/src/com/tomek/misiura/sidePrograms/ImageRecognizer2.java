@@ -1,3 +1,4 @@
+package com.tomek.misiura.sidePrograms;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.io.File;
@@ -18,6 +19,8 @@ import org.opencv.core.Size;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.utils.Converters;
+
+import com.tomek.misiura.recognition.Contour;
 
 public class ImageRecognizer2 {
 	byte[] data;

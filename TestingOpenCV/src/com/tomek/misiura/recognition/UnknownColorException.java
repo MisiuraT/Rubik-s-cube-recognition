@@ -1,3 +1,4 @@
+package com.tomek.misiura.recognition;
 
 public class UnknownColorException extends Exception {
 

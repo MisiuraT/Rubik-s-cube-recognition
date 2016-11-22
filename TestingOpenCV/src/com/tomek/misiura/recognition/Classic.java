@@ -1,3 +1,4 @@
+package com.tomek.misiura.recognition;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.io.File;
@@ -21,11 +22,16 @@ import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.utils.Converters;
 
+import CubeFragments.CubeWall;
+import CubeFragments.FrontWall;
+import CubeFragments.LeftWall;
+import CubeFragments.RightWall;
+
 public class Classic {
 	public static void main(String[] args){
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
         ImageRecognizer recognizer = new ImageRecognizer();
-        recognizer.readImage("images//leftblue2.jpg");
+        recognizer.readImage("images//leftblue1.jpg");
         System.out.println("Pre");
         List<Contour> contourList = recognizer.getContours();
         System.out.println("post");
@@ -33,8 +39,7 @@ public class Classic {
         	item.drawContour(recognizer.image, new Scalar(0,255,255));
         }
         CubeContours cubeContours = new CubeContours(contourList);
-        cubeContours.matchContours();
-        cubeContours.sortFrontList();
+        cubeContours.splitContours();
         
     /*    cubeContours.frontSideContours.remove(8);
         cubeContours.frontSideContours.remove(7);
@@ -46,14 +51,22 @@ public class Classic {
         
         //cubeContours.deleteOuter(cubeContours.frontSideContours);
         
-        for(Contour item : cubeContours.frontSideContours){
+        for(Contour item : cubeContours.rightSideContours){
         	System.out.print(item.center);
         }
-        
-        FrontWall wall = new FrontWall();
-        
+      //  cubeContours.leftSideContours.remove(3);
+        CubeWall frontWall = new FrontWall();
+        CubeWall leftWall = new LeftWall();
+        CubeWall rightWall = new RightWall();
         try {
-			wall.reconstructWall(cubeContours.frontSideContours);
+			rightWall.reconstructWall(cubeContours.rightSideContours);
+		} catch (RecontructionUnsuccessfulException e1) {
+			System.out.println(e1);	        
+			e1.printStackTrace();
+			return;
+		}
+        try {
+			frontWall.reconstructWall(cubeContours.frontSideContours);
 		} catch (RecontructionUnsuccessfulException e1) {
 			System.out.println(e1);
 			e1.printStackTrace();
@@ -62,7 +75,7 @@ public class Classic {
        
         List<Contour> lista = new ArrayList<Contour>();
         System.out.println("----");
-        Contour[][] reconstructed = wall.wall;
+        Contour[][] reconstructed = rightWall.wall;
         for(int i=0;i<3;i++){
         	for(int j=0;j<3;j++){
         		if(reconstructed[i][j]!=null){
@@ -94,7 +107,7 @@ public class Classic {
         }*/
    //     System.out.println(color[2]+", "+color[1]+", "+color[0]);
         
-        List<Contour> list= cubeContours.frontSideContours;
+        List<Contour> list= cubeContours.rightSideContours;
  //       for(Contour item : leftList){
  //       	System.out.println(item);
  //       }
@@ -107,10 +120,26 @@ public class Classic {
 			}
         	System.out.println(color);
         }
-        recognizer.drawLines(lista);
+        recognizer.drawLines(list);
         recognizer.saveImages("kostka");      
 	}
 		
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	public static void HoughLinesP(Mat mat, Mat gray){
 		
 		Imgproc.GaussianBlur(gray, gray, new Size(11,11), 1.5,1.5);

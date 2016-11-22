@@ -1,3 +1,4 @@
+package com.tomek.misiura.recognition;
 import java.util.List;
 
 import org.opencv.core.Mat;

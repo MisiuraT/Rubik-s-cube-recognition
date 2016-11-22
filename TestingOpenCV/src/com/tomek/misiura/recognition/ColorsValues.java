@@ -1,3 +1,4 @@
+package com.tomek.misiura.recognition;
 import java.util.LinkedList;
 import java.util.List;
 

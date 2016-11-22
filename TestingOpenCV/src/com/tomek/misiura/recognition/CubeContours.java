@@ -1,3 +1,4 @@
+package com.tomek.misiura.recognition;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,7 +12,7 @@ public class CubeContours {
 		this.unsortedList = unsortedList;		
 	}
 	
-	public void matchContours(){
+	public void splitContours(){
 		trash = new ArrayList<Contour>();
 		leftSideContours = new ArrayList<Contour>();
 		rightSideContours = new ArrayList<Contour>();
@@ -28,7 +29,14 @@ public class CubeContours {
 					else
 						trash.add(item);						
 		}
+		deleteDuplicates(frontSideContours);
+		deleteDuplicates(leftSideContours);
+		deleteDuplicates(rightSideContours);
+		sortRightList();
+		sortLeftList();
+		sortFrontList();
 	}
+	
 	
 	private List<Contour> sortList(List<Contour> toSort, ContourComparator comparator){
 		deleteDuplicates(toSort);
@@ -47,23 +55,28 @@ public class CubeContours {
 		return sortedList;
 	}
 	
-	public void sortLeftList(){
+	private void sortLeftList(){
 		leftSideContours = sortList(leftSideContours,new leftListComparator());
 	}
 	
 	
-	public void sortFrontList(){		
+	private void sortFrontList(){		
 		frontSideContours = sortList(frontSideContours, new frontListComparator());	
+	}
+	
+	private void sortRightList(){
+		rightSideContours = sortList(rightSideContours, new rightListComparator());
 	}
 	
 	
 	
-	public void deleteDuplicates(List<Contour> contours){
+	private void deleteDuplicates(List<Contour> contours){
 		for(int i=0;i<contours.size()-1;i++){
 			Contour inspected = contours.get(i);
 			for(int j=i+1;j<contours.size();j++){
 				Contour compared = contours.get(j);
 				if(inspected.isSimilar(compared)){
+					//TODO delete smaller ones
 					contours.remove(compared);
 					j--;
 				}
@@ -86,6 +99,13 @@ public class CubeContours {
 				contours.remove(i);
 				i--;
 			}
+		}
+	}
+	
+	private class rightListComparator implements ContourComparator{
+		@Override
+		public boolean isBetter(Contour pretendend, Contour champion){
+			return pretendend.center.x<champion.center.x;
 		}
 	}
 	
